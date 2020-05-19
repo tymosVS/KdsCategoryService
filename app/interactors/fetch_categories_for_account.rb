@@ -6,10 +6,10 @@ class FetchCategoriesForAccount
   def call
     categories = []
     redis_client.hkeys(context.account_uuid).each do |category|
-      if Date.today - Date.parse(redis_client.hmget(context.account_uuid, category)[0]) > 30.days
-        redis_client.hdel(context.account_uuid, key)
+      if Date.today - Date.parse(redis_client.hmget(context.account_uuid, category)[0]) > 30
+        redis_client.hdel(context.account_uuid, category)
       else
-        if Date.today - Date.parse(redis_client.hmget(context.account_uuid, category)[0]) < context.days.days
+        if Date.today - Date.parse(redis_client.hmget(context.account_uuid, category)[0]) < context.days
           categories.push(category)
         end
       end

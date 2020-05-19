@@ -15,5 +15,5 @@ gemspec
 # gem 'byebug', group: [:development, :test]
 gem "interactor", "~> 3.0"
 gem 'redis'
-gem 'rspec'
 gem 'rspec-rails'
+gem 'faker'
