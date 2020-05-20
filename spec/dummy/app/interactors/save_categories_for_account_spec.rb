@@ -1,31 +1,26 @@
-# require 'rails_helper'
+# frozen_string_literal: true
 
 RSpec.describe SaveCategoriesForAccount, type: :interactor do
   describe '#call' do
-    context '90 day period' do
-      (30..90).each do |day|
-        SaveCategoriesForAccount.call(account_uuid:'test3', category_names: ['one', 'none'])
-        let(:params) do
-          {
-            account_uuid: 'test3',
-            days: 0
-          }
-        end
+    context 'save uuid and category' do
+      let(:params) { { account_uuid: 'test_2', category_names: %w[category category2] } }
 
-        it { expect(FetchCategoriesForAccount.call(params).categories).to be_empty }
+      before do
+        described_class.call(params)
       end
-
-      (1..30).each do |day|
-        SaveCategoriesForAccount.call(account_uuid:'test4', category_names: ['one', 'none'])
-        let(:params) do
-          {
-            account_uuid: 'test4',
-            days: 0
-          }
-        end
-
-        it { expect(FetchCategoriesForAccount.call(params).categories).to be_empty }
+      subject do
+        FetchCategoriesForAccount.call(fetch_params).categories
       end
+      let(:fetch_params) { { account_uuid: 'test_2', days: 30 } }
+      it { expect(subject.count).to eq(2) }
+    end
+
+    context 'spead' do
+      let(:categories) { %w[breads cereals rice pasta noodles vegetables fruit lean meat fish] }
+      let(:params_categories) { categories.sample(rand(1..2)) }
+
+      subject { described_class.call(account_uuid: 'test_spead', category_names: params_categories) }
+      it { expect { subject }.to perform_under(10).ms }
     end
   end
 end

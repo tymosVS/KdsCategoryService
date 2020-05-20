@@ -2,6 +2,8 @@
 
 # Add this to load files in spec/support
 require 'rails_helper'
+require 'rspec-benchmark'
+
 RSpec.configure do |config|
 
   config.expect_with :rspec do |expectations|
@@ -18,7 +20,7 @@ RSpec.configure do |config|
   config.disable_monkey_patching!
 
   if config.files_to_run.one?
-    config.default_formatter = "doc"
+    config.default_formatter = 'doc'
   end
 
   config.profile_examples = 10
@@ -27,4 +29,5 @@ RSpec.configure do |config|
 
   Kernel.srand config.seed
 
+  config.include RSpec::Benchmark::Matchers
 end

@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.name        = "kds_category_service"
   spec.version     = KdsCategoryService::VERSION
   spec.authors     = ["Vladymyr Tymoshenko"]
-  spec.email       = ["timos9vs@gmail.com"]
+  spec.email       = ["test@gmail.com"]
   spec.homepage    = "http://homepage.com"
   spec.summary     = "Summary of KdsCategoryService."
   spec.description = "Description of KdsCategoryService."

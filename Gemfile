@@ -13,7 +13,13 @@ gemspec
 
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
+
+group :development, :test do
+  gem 'rspec-benchmark'
+  gem 'faker'
+  gem 'rspec-rails'
+end
+
 gem "interactor", "~> 3.0"
 gem 'redis'
-gem 'rspec-rails'
-gem 'faker'
+
