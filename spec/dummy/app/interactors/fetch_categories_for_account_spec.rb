@@ -1,8 +1,24 @@
 # frozen_string_literal: true
 
-RSpec.describe FetchCategoriesForAccount, type: :interactor do
+RSpec.describe KdsCategoryService::FetchCategoriesForAccount do
   describe '#call' do
-    10000.times do |n|
+    10000.times do |_n|
+      context 'execution speed' do
+        let(:categories) { %w[breads cereals rice pasta noodles vegetables fruit lean meat fish] }
+        let(:params_categories) { categories.sample(rand(1..2)) }
+        let(:account_uuid) { 'test_spead' }
+
+        before do
+          KdsCategoryService::SaveCategoriesForAccount.call(
+            account_uuid: account_uuid,
+            category_names: params_categories
+          )
+        end
+
+        subject { described_class.call(account_uuid: account_uuid, days: 30) }
+        it { expect { subject }.to perform_under(10).ms }
+      end
+
       context 'old keys' do
         $redis.hset('test', 'category', Date.today - 40.days)
         let(:params) do
@@ -16,9 +32,9 @@ RSpec.describe FetchCategoriesForAccount, type: :interactor do
       end
 
       context 'search only for a certain number of days' do
-        $redis.hset('test2', 'category1', Date.today - 25.days)
-        $redis.hset('test2', 'category2', Date.today - 20.days)
-        $redis.hset('test2', 'category3', Date.today - 15.days)
+        [1, 2, 3].each do |i|
+          $redis.hset('test2', 'category' + i.to_s, Date.today - (30 - i * 5).days)
+        end
         let(:expected_response) { %w[category2 category3] }
 
         let(:params) do
@@ -42,7 +58,7 @@ RSpec.describe FetchCategoriesForAccount, type: :interactor do
               }
             end
           end
-          it { expect(FetchCategoriesForAccount.call(params).categories).to be_empty }
+          it { expect(described_class.call(params).categories).to be_empty }
         end
 
         context 'new values' do
@@ -55,21 +71,8 @@ RSpec.describe FetchCategoriesForAccount, type: :interactor do
               }
             end
           end
-          it { expect(FetchCategoriesForAccount.call(params).categories.count).to eq(30) }
+          it { expect(described_class.call(params).categories.count).to eq(30) }
         end
-      end
-
-      context 'execution spead' do
-        let(:categories) { %w[breads cereals rice pasta noodles vegetables fruit lean meat fish] }
-        let(:params_categories) { categories.sample(rand(1..2)) }
-        let(:account_uuid) { 'test_spead' }
-
-        before do
-          SaveCategoriesForAccount.call(account_uuid: account_uuid, category_names: params_categories)
-        end
-
-        subject { described_class.call(account_uuid: account_uuid, days: 30) }
-        it { expect { subject }.to perform_under(10).ms }
       end
     end
   end

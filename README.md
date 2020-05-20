@@ -1,26 +1,6 @@
 # KdsCategoryService
 Short description and motivation.
 
-## Usage
-How to use my plugin.
-
-## Installation
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'kds_category_service'
-```
-
-And then execute:
-```bash
-$ bundle
-```
-
-Or install it yourself as:
-```bash
-$ gem install kds_category_service
-```
-
 ## Contributing
 Contribution directions go here.
 
